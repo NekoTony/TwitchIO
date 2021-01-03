@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 """
@@ -33,10 +34,15 @@ class DiscordCog(commands.Bot):
     def __init__(self, bot):
         # Discord bot instance
         self.discord_bot = bot
-        super().__init__(irc_token='...', nick='...', prefix='!', initial_channels=['...'])
+        self.bot = commands.Bot(irc_token='...', nick='...', prefix='!', initial_channels=['...'])
 
         # Start the Twitch Bot
-        self.loop.create_task(self.start())
+        self.discord_bot.loop.create_task(self.bot.start())
+
+        #Registering TwitchIO Command
+        self.bot.command(name="test")(self.twitch_command)
+        #Registering TwitchIO Event
+        self.bot.listen("event_message")(self.event_message)
 
     # Discord.py event
     async def on_message(self, message):
@@ -53,7 +59,6 @@ class DiscordCog(commands.Bot):
         await ctx.send('Hai there!')
 
     # TwitchIO command
-    @commands.command(name='test')
     async def twitch_command(self, ctx):
         await ctx.send('Hai there!')
 
